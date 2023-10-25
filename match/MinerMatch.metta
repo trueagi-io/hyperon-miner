@@ -1,4 +1,4 @@
-;; MaTTa port of pattern miner, using match.
+;; MeTTa port of pattern miner, using match.
 
 ;; Given a collection of data trees db, a minimum support ms and an
 ;; initial collection of patterns Candidate (containing at least the identity
