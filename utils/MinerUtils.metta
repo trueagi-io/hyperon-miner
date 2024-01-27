@@ -1,5 +1,23 @@
-;; Import Num
-; !(import! &self ../common/Num.metta)
+;;;;;;;;;
+;; Nat ;;
+;;;;;;;;;
+
+;; Define Nat
+(: Nat Type)
+(: Z Nat)
+(: S (-> Nat Nat))
+
+;; Define <=
+(: <= (-> $a $a Bool))
+(= (<= $x $y) (or (< $x $y) (== $x $y)))
+
+;; Define cast functions between Nat and Number
+(: fromNumber (-> Number Nat))
+(= (fromNumber $n) (if (<= $n 0) Z (S (fromNumber (- $n 1)))))
+(: fromNat (-> Nat Number))
+(= (fromNat Z) 0)
+(= (fromNat (S $k)) (+ 1 (fromNat $k)))
+
 ;; Define max
 (: max (-> $a $a $a))
 (= (max $x $y) (if (> $x $y) $x $y))
