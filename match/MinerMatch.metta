@@ -13,29 +13,27 @@
 ;; 6. Repeat till termination
 
 ;; Import utils
-!(import! &self ../utils/MinerUtils.metta)
+; !(import! &self ../utils/MinerUtils.metta)
 
 ;; Get candidate patterns depth zero
-(= (get-candidate Z $linkType $db $ms $Xvar $Yvar)
-    (let $sp (specialize $linkType $Xvar $Yvar)
-      (support $sp $db $ms $Xvar $Yvar)))
+(= (get-candidate Z $linkType $ms)
+    (let $sp (specialize $linkType)
+      (support $sp $ms)))
 
 ;; Get candidate patterns depth n. (maximum is three)
-(= (get-candidate (S $k) $linkType $db $ms $Xvar $Yvar)
-    (let $comb
-        (, (get-pattern (get-candidate $k $linkType $db $ms $Xvar $Yvar)) 
-          (get-pattern (get-candidate Z $linkType $db $ms $Xvar $Yvar)))
-      (support $comb $db $ms $Xvar $Yvar)))
+(= (get-candidate (S $k) $linkType $ms)
+    (let $comb (, (get-pattern (get-candidate $k $linkType $ms))
+                  (get-pattern (get-candidate Z $linkType $ms)))
+      (support (flatten $comb) $ms)))
 
 ;; Frequent patterns Miner
 (= (miner $db $ms $depth)
-    (superpose ((extract-valuation $db)
+    (superpose ((init-miner $db $ms $highsurp)
                 (let $link (get-links)
-                  (get-candidate $depth $link $db $ms $Xvar $Yvar)))))
+                  (get-candidate $depth $link $ms)))))
 
 ;; Surprising patterns miner
 (= (miner-surprising $db $ms $depth $highsurp)
-  (let $cptrn (miner $db $ms $depth)
-    (superpose ((get-universe-size $db)
-                ((let $isurp (iSurprisingness $cptrn $db) 
-                  (if (> $isurp $highsurp) (surp $cptrn $isurp) (superpose ()))))))))
+  (let* (($cptrn (miner $db $ms $depth))
+         ($isurp (iSurprisingness $cptrn)))
+         (if (> $isurp $highsurp) (surp (get-pattern $cptrn) $isurp) (superpose ()))))
