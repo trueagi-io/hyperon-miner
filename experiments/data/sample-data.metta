@@ -1,0 +1,26 @@
+ (Inheritance (And (And C D) (Or P G)) (Or (And T S) (And N M)))
+ (Inheritance (And (And C D) (Or P G)) (Or (And T S) (And N M)))
+(Inheritance (And (And C D) E) L)
+(Inheritance (And (And C D) E) L)
+
+(Inheritance (And A B) C)
+(Inheritance (And (And C D) B) (Or C D))
+(Inheritance (And (And C D) B) (Or C D))
+(Inheritance (And A B) F)
+(Inheritance (And A B) F)
+(Inheritance A B)
+(Inheritance A B)
+(Inheritance A C)
+(Inheritance D D)
+
+
+((Inheritance A B)
+(Inheritance A B)
+(Inheritance A C)
+(Inheritance D D)
+ )
+
+  ; (abebe)
+ ; (kebede)
+ ; (chala)
+ ; (abebe)

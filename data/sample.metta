@@ -1,4 +1,6 @@
 (Inheritance Allen human)
+(stv Allen 0.5 1)
+(Inheritance Abe human)
 (Inheritance Abe human)
 (Inheritance Cason human)
 (Inheritance Davion human)
@@ -58,4 +60,6 @@
 (Inheritance Jassy sodadrinker)
 (Inheritance Jenica sodadrinker)
 (Inheritance Kecia sodadrinker)
+(Inheritance Nil Nil)
 (Member Allen Father)
+(Nil Nil Nil)

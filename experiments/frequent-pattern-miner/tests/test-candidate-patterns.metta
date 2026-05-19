@@ -1,0 +1,31 @@
+!(import! &self ../../utils/index_to_var)
+!(import! &self ../../utils/common-utils)
+!(import! &self ../valuation)
+!(import! &self ../shallow-abstractions)
+!(import! &self ../specialization)
+!(import! &self ../candidate)
+
+!(add-atom &dbspace (Inheritance Abe human))
+!(add-atom &dbspace (Inheritance Rio human))
+!(add-atom &dbspace (Inheritance Bob human))
+!(add-atom &dbspace (Inheritance Liam Espresso-Fan Blue-Bottle) )
+!(add-atom &dbspace (Inheritance Heidi Espresso-Fan Blue-Bottle))
+!(add-atom &dbspace (Inheritance Liam Pizza-Lover The-Slice-Shop))
+!(add-atom &dbspace (Inheritance Heidi Pizza-Lover The-Slice-Shop))
+
+   
+!(candidate-pattern-miner $x &dbspace 2 &cndpspace)
+!(assertEqual (collapse (match &cndpspace $x $x)) 
+                           ((CandidatePattern (Inheritance Z human) 3) 
+                            (CandidatePattern (Inheritance Z (S Z)) 3) 
+                            (CandidatePattern (Inheritance Heidi Z (S Z)) 2)
+                            (CandidatePattern (Inheritance Liam Z (S Z)) 2)
+                            (CandidatePattern (Inheritance Z Pizza-Lover The-Slice-Shop) 2)
+                            (CandidatePattern (Inheritance Z Pizza-Lover (S Z)) 2)
+                            (CandidatePattern (Inheritance Z Espresso-Fan Blue-Bottle) 2)
+                            (CandidatePattern (Inheritance Z Espresso-Fan (S Z)) 2)
+                            (CandidatePattern (Inheritance Z (S Z) The-Slice-Shop) 2)
+                            (CandidatePattern (Inheritance Z (S Z) Blue-Bottle) 2)
+                            (CandidatePattern (Inheritance Z (S Z) (S (S Z))) 4)))
+
+

@@ -1,0 +1,8 @@
+.venv
+nvenv
+__pycache__/
+*.pyc
+experiments/utils/surp-utils/conc_miner.metta
+
+
+

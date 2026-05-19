@@ -1,0 +1,3 @@
+scipy
+hyperon==0.2.6
+regex

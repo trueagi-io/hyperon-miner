@@ -1,17 +1,10 @@
 !(import! &self DeBruijnIndex)
 
-;; Define max
-(: max (-> $a $a $a))
-(= (max $x $y) (if (> $x $y) $x $y))
-
-;; Define min
-(: min (-> $a $a $a))
-(= (min $x $y) (if (< $x $y) $x $y))
 
 ;; Tuple count grounded python function
 ;;!(extend-py! ../utils/helper.py)
 ;; This is very slow, use the grounded python function instead
-(= (tuple-count $tuple) (if (== $tuple ()) 0 (+ 1 (tuple-count (cdr-atom $tuple)))))
+;;(= (tuple-count $tuple) (if (== $tuple ()) 0 (+ 1 (tuple-count (cdr-atom $tuple)))))
 
 ;;;;;;;;;;;;;;;;;;;;;; 
 ;; Helper for Match ;;
@@ -60,7 +53,7 @@
 ;; Search for Triplets in DB 
 ;; do variable mapping and generate specializations
 (= (variable-mapping $db $kb $msup)
-   ;(match $db (: $p ($link $x $y)) ;; To ignore type definition in bio-as
+   ;(match $db (: $p ($link $x $y)) ;; To ignore type definition in bio-as)
    (match $db ($link $x $y) 
     (superpose ((build-specialization ($link $x (VarIdx (S Z))) $kb $db $msup)
                 (build-specialization ($link (VarIdx Z) $y) $kb $db $msup)
@@ -97,17 +90,18 @@
       (= (universe-size) (let $u (collapse (match $dbspace $x 1)) (tuple-count $u)))))
 
 ;; Probability formula
-(= (prob $count) (/ $count (universe-size)))
+(= (prob $count) (// $count (universe-size)))
+
 
 ;; iSurprisingness formula
 (= (iSurprisingness $pattern)
     (case $pattern (
-      ((candidate (, $p1 $p2) $cnt)
+      ((candidate (, $p1 $p2 ) $cnt)
       (let* (($pp1 (prob (count $p1)))
           ($pp2 (prob (count $p2)))
           ($p1p2 (* $pp1 $pp2)) ;; probability estimate 
           ($p (prob $cnt))) ;; empirical
-          (/ (max (- $p $p1p2) (- $p1p2 $p)) $p)))
+          (// (max (- $p $p1p2) (- $p1p2 $p)) $p)))
       ((candidate (, $p1 $p2 $p3) $cnt)
       (let* (($pp1 (prob (count $p1)))
           ($pp2 (prob (count $p2)))
@@ -116,10 +110,10 @@
           ($pp1p3 (prob (count (, $p1 $p3))))
           ($pp2p3 (prob (count (, $p2 $p3))))
           ;; probability estimate
-          ($maxP (max (* $pp1p2 $pp3) (max (* $pp1p3 $pp2) (max (* $pp2p3 $pp1) (* $pp1 (* $pp2 $pp3))))))
-          ($minP (min (* $pp1p2 $pp3) (min (* $pp1p3 $pp2) (min (* $pp2p3 $pp1) (* $pp1 (* $pp2 $pp3))))))
+          ($maxP (max-of-two (* $pp1p2 $pp3) (max-of-two (* $pp1p3 $pp2) (max-of-two (* $pp2p3 $pp1) (* $pp1 (* $pp2 $pp3))))))
+          ($minP (min-of-two (* $pp1p2 $pp3) (min-of-two (* $pp1p3 $pp2) (min-of-two (* $pp2p3 $pp1) (* $pp1 (* $pp2 $pp3))))))
           ($p (prob $cnt))) ;; empirical
-          (/ (max (- $p $maxP) (- $minP $p)) $p)))
+          (// (max (- $p $maxP) (- $minP $p)) $p)))
       ($_ 0))))
 
 (= (isurp? ($ptrn $cnt)) (if (> (iSurprisingness (candidate $ptrn $cnt)) (highsurp)) true false))
